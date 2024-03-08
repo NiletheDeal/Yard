@@ -68,12 +68,39 @@ int main() {
 	enqueue(front, rear, top->getData());
 	pop(top);
       }
-      //queue is a linked list where you save the head and tail, still single link(maybe a method to find the last node(which node points to null)
-      //stack is a linked list where you save only the head(bottom of stack), still single link (find the last node that points to not null and then that is the top of stack;
-	  }
+      Node* tree = NULL;//top of the tree stack
+      while(front != rear) {
+	value = front->GetData();
+	vP = precedence(value);
+	if(vp = 0) {
+	  push(tree, value);
 	}
+	else {
+	  Node* temp = new Node();
+	  temp->setData(value);
+	  temp->setRight(tree);
+	  pop(tree);
+	  temp->SetLeft(tree);
+	  pop(tree);
+	  pushTree(tree, temp);
+	}
+	front = front->getNext():
       }
-    }
+      //Rear Node
+      value = rear->GetData();
+      vP = precedence(value);
+      if(vp = 0) {
+	push(tree, value);
+      }
+      else {
+	Node* temp = new Node();
+	temp->setData(value);
+	temp->setRight(tree);
+	pop(tree);
+	temp->SetLeft(tree);
+	pop(tree);
+	pushTree(tree, temp);
+      }
     }
   }
 }
@@ -149,3 +176,9 @@ int precedence(char* p) {
     return 0; //Lowest, which are the numbers
   }
 }
+void pushTree(Node*& top, Node* tree) {//gonna add a node to the tree stack instead of adding data value, makes it so that can give the nodes children
+   tree->setNext(top);
+   top = tree;
+}
+
+   
