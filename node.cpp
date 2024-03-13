@@ -8,7 +8,7 @@ Node::Node() { //Constructor
   left = NULL;
   right = NULL;
   next = NULL;
-  data = NULL;
+  data = '\0';
 }
 
 Node::~Node() { //Destructor
@@ -28,7 +28,7 @@ void Node::setNext(Node* newNext) {
   next = newNext;
 }
 
-void Node::setData(char* newData) {
+void Node::setData(char newData) {
   data = newData;
 }
 
@@ -45,6 +45,6 @@ Node* Node::getNext() {
   return next;
 }
 
-char* Node::getData() {
+char Node::getData() {
   return data;
 }

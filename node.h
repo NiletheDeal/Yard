@@ -11,17 +11,17 @@ class Node {
   void setRight(Node*);
   void setLeft(Node*);
   void setNext(Node*);
-  void setData(char*);
+  void setData(char);
   //Getters
   Node* getRight();
   Node* getLeft();
   Node* getNext();
-  char* getData();
+  char getData();
  private:
   Node* left;
   Node* right;
   Node* next;
-  char* data;
+  char data;
  
 };
 #endif
