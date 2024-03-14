@@ -13,6 +13,8 @@ void pushTree(Node*& top, Node* tree);
 void disInfix(Node* InF);
 void disPrefix(Node* PreF);
 void disPostfix(Node* PosF);
+void displayQueue(Node* front, Node* rear);
+void print(Node* tree, int count);
 int main() {
   bool looping = true;
   char command[10];
@@ -22,7 +24,7 @@ int main() {
   Node* rear = NULL;
   char value;
   while(looping == true) {
-    cout << "INPUT, PRE, POST, IN" << endl;
+    cout << "INPUT or QUIT" << endl;
     cin.get(command, 10);
     cin.clear();
     cin.ignore(10000, '\n');
@@ -30,8 +32,9 @@ int main() {
       cout << "Enter your input" << endl;
       cin.getline(input, 100);
       cin.clear();
-      cin.ignore(10000, '\n');
-      int inputCount = 0;
+      cout << input << endl;
+      //good input
+      cout << strlen(input) << endl;
       top = NULL;
       front = NULL;
       rear = NULL;
@@ -39,47 +42,58 @@ int main() {
 	if(input[i] != ' ') {
 	  if(isdigit(input[i])) {
 	    enqueue(front, rear, input[i]);
+	    cout << input[i] << endl;
 	  }
 	  else {
 	    int inP = precedence(input[i]);
-	    int topP = precedence(top->getData());
-	    if(topP  == 1 || topP == 2 || topP == 3) {//operators precedence check
-	      if(top != NULL) {
-		while(topP >= inP && top->getData() != '(') {
-		  enqueue(front, rear, top->getData());
-		  pop(top);
-		  topP = precedence(top->getData());
-		  if(top ==NULL) {
-		    break;
-		  }
-		}
-	      }
-	      push(top, input[i]);//Add the input to the stack  
-	    }
-	    if(topP == 5) {//left parenthesises just add
+	    if(top == NULL) {
+	      cout << input[i] << endl;
 	      push(top, input[i]);
 	    }
-	    if(topP == 6) {//right parenthesises pop the stack till the matched parentheseses
-	      while(top->getData() != '(') {
-		enqueue(front, rear, top->getData());
-		pop(top);
+	    else {
+	      cout << input[i] << endl;
+	      int topP = precedence(top->getData());
+	      if(inP  == 1 || inP == 2 || inP == 3) {//operators precedence check
+		if(top != NULL) {
+		  while(topP >= inP && top->getData() != '(') {
+		    topP = precedence(top->getData());
+		    enqueue(front, rear, top->getData());
+		    pop(top);
+		    if(top ==NULL) {
+		      break;
+		    }
+		  }
+		}
+	      push(top, input[i]);//Add the input to the stack  
 	      }
-	      if(top->getData() == '(') {
-		pop(top);
+	      else if(inP == 5) {//left parenthesises just add
+		push(top, input[i]);
+	      }
+	      else if(inP == 6) {//right parenthesises pop the stack till the matched parentheseses
+		while(top->getData() != '(') {
+		  enqueue(front, rear, top->getData());
+		  pop(top);
+		}
+		if(top->getData() == '(') {
+		  pop(top);
+		}
 	      }
 	    }
 	  }
 	}
       }
+      
+      
       while(top != NULL) {//move the stack to the queue at the end
 	enqueue(front, rear, top->getData());
 	pop(top);
       }
+      displayQueue(front, rear);
       Node* tree = NULL;//top of the tree stack
       while(front != rear) {
 	value = front->getData();
 	int vP = precedence(value);
-	if(vP = 0) {
+	if(vP = 0) {//if the value is a number
 	  push(tree, value);
 	}
 	else {
@@ -110,6 +124,8 @@ int main() {
       }
       bool check = false;
       cout << "Binary Expansion Tree Done" << endl << endl;
+      int count  = 0;
+      print(tree, count);
       while(check == false) {
 	cout << "Display Option: IN for infix notation, POST for postfix notation, PRE for prefix notation" << endl;
 	cin.get(command, 10);
@@ -246,4 +262,30 @@ void disPostfix(Node* PosF) { //Display Postfix Function
         disPostfix(PosF->getRight());
         cout << PosF->getData() << " ";
     }
+}
+void displayQueue(Node* front, Node* rear) { //DisplayQueue function
+    if (isEmpty(front, rear)) {
+        cout << "Empty queue" << endl;
+    }
+    else {
+        Node* temp = front;
+        while (temp != NULL) {
+            cout << temp->getData() << " ";
+            temp = temp->getNext();
+        }
+        cout << endl;
+    }
+}
+void print(Node* tree, int count) {//print out tree
+  if(tree->getRight() != NULL) {//get to the right child 
+    print(tree->getRight(), count+1);
+  }
+  for(int i = 0; i < count; i++) {//tabs over
+    cout << '\t';
+  }
+  cout << tree->getData() << endl;//print out value
+  //left side
+  if(tree->getLeft() != NULL) {//get to the left child
+    print(tree->getLeft(), count+1);
+  }
 }
