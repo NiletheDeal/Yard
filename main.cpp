@@ -34,9 +34,9 @@ int main() {
     cin.ignore(10000, '\n');
     if(strcmp(command, "INPUT") == 0) {
       cout << "Enter your input" << endl;
-      cin.getline(input, 100);
+      cin.getline(input, 100);//take in formula
       cin.clear();
-      cout << strlen(input) << endl;
+      //cout << strlen(input) << endl;
       top = NULL;
       front = NULL;
       rear = NULL;
@@ -55,32 +55,29 @@ int main() {
 	    else {//if the stack has something on it
 	      int topP = precedence(top->getData());
 	      if(inP  == 1 || inP == 2 || inP == 3) {//operators precedence check if the operator is greater precedence then what you are gonna add to it in which case move the top of the stack to the queue until it is less or you reach (
-		if(top != NULL) {
-		  while(topP >= inP && top->getData() != '(') {
-		    topP = precedence(top->getData());
-		    
-		    enqueue(front, rear, top->getData());
-		    pop(top);
-		    if(top ==NULL) {//end of list stop
-		      break;
-		    }
+		while(topP >= inP && top->getData() != '(') {
+		  topP = precedence(top->getData());	  
+		  enqueue(front, rear, top->getData());//queue top of stack
+		  pop(top);//remove top of stack
+		  if(top ==NULL) {//end of list stop
+		    break;
 		  }
 		}
-		cout << input[i] << endl;
+		//cout << input[i] << endl;
 		push(top, input[i]);//Add the input to the stack  
 	      }
 	      else if(inP == 5) {//left parenthesises just add
-		cout << input[i] << endl;
+		//cout << input[i] << endl;
 		push(top, input[i]);
 	      }
 	      else if(inP == 6) {//right parenthesises pop the stack till the matched parentheseses
 		while(top->getData() != '(') {
-		  cout << "This isn't happening" << endl;
-		  enqueue(front, rear, top->getData());
-		  pop(top);
+		  //cout << "This isn't happening" << endl;
+		  enqueue(front, rear, top->getData()); //queue top
+		  pop(top);//remove top
 		}
 		if(top->getData() == '(') {
-		  pop(top);
+		  pop(top);//remove the left parenthesis without moving it to queue
 		}
 	      }
 	    }
@@ -104,21 +101,21 @@ int main() {
 	  cout << "test" << endl;
 	  push(tree, value);//just push it to the tree
 	}
-	else {
+	else {//for operators
 	  Node* temp = new Node();
-	  temp->setData(value);
+	  temp->setData(value);//set the value
 	  //tree->setNext(NULL);
-	  temp->setRight(tree);
-	  pop(tree);
+	  temp->setRight(tree);//take top of the tree as the right child
+	  pop(tree);//remove the top of the tree you just set as right child
 	  //tree->setNext(NULL);
-	  temp->setLeft(tree);
-	  pop(tree);
-	  pushTree(tree, temp);
+	  temp->setLeft(tree);//take top of the tree as the left child
+	  pop(tree);//remove the top of the tree you just set as left child
+	  pushTree(tree, temp);//add new node to tree stack
 	}
-	front = front->getNext();
+	front = front->getNext();//move across the queue
 	print(tree, 0);
       }
-      //Rear Node
+      //For the last node just run it again
       value = rear->getData();
       int vP = precedence(value);
       if(vP = 0) {
@@ -142,17 +139,17 @@ int main() {
 	cin.get(command, 10);
 	cin.clear();
 	cin.ignore(10000, '\n');
-	if(strcmp(command, "IN") == 0) {
+	if(strcmp(command, "IN") == 0) {//Infix notation
 	  disInfix(tree);
 	  cout << endl << endl;
 	  check = true;
 	}
-	else if(strcmp(command, "POST") == 0) {
+	else if(strcmp(command, "POST") == 0) {//Postfix notation
 	  disPostfix(tree);
 	  cout << endl << endl;
 	  check =true;
 	}
-	else if(strcmp(command, "PRE") == 0) {
+	else if(strcmp(command, "PRE") == 0) {//Prefix notation
 	  disPrefix(tree);
 	  cout << endl << endl;
 	  check = true;
@@ -171,7 +168,7 @@ int main() {
     }
   }
 }
-void enqueue(Node*& front, Node*& rear, char value) {
+void enqueue(Node*& front, Node*& rear, char value) {//add to the rear of queue
   Node* temp = new Node();
   temp->setData(value);
   temp->setNext(NULL);
@@ -179,12 +176,12 @@ void enqueue(Node*& front, Node*& rear, char value) {
     front = temp;
     rear = temp;
   }
-  else {
+  else {//add behind rear, so rear is infront of temp and then set rear to be temp
     rear->setNext(temp);
     rear = temp;
   }
 }
-void dequeue(Node*& front, Node*& rear) {
+void dequeue(Node*& front, Node*& rear) {//remove from queue
   if(isEmpty(front, rear)) {
     cout << "Empty queue" <<endl;
   }
@@ -193,13 +190,13 @@ void dequeue(Node*& front, Node*& rear) {
     front == NULL;
     rear == NULL;
   }
-  else {
+  else {//front gets moved up to its next
     Node* temp = front;
     front = front->getNext();
     temp->setNext(NULL);
   }
 }
-bool isEmpty(Node* front, Node*rear) {
+bool isEmpty(Node* front, Node*rear) {//check if queue is empty
   if(front == NULL && rear == NULL) {
     return true;
   }
@@ -211,7 +208,7 @@ void pop(Node*& top) {//remove the top node
   if(top == NULL) {
     cout << "Empty1" << endl;
   }
-  else {
+  else {//top goes down to its next
     Node* temp = top;
     top = top->getNext();
     temp->setNext(NULL);
@@ -261,20 +258,20 @@ void disInfix(Node* InF) { //Display Infix Function
 
 void disPrefix(Node* PreF) { //Display Prefix Function
   cout << PreF->getData();
-  if(PreF->getLeft() != NULL) {
+  if(PreF->getLeft() != NULL) {//go down the left child
     disPrefix(PreF->getLeft());
   }
-  if(PreF->getRight() != NULL) {
+  if(PreF->getRight() != NULL) {//go down the right child
     disPrefix(PreF->getRight());
   }
   return;
 }
 
 void disPostfix(Node* PosF) { //Display Postfix Function
-  if (PosF->getLeft() != NULL) {
+  if (PosF->getLeft() != NULL) {//go down left child
         disPostfix(PosF->getLeft());
   }
-  if(PosF->getRight() != NULL) {
+  if(PosF->getRight() != NULL) {//go down right child
     disPostfix(PosF->getRight());
   }
   cout << PosF->getData();
@@ -284,7 +281,7 @@ void displayQueue(Node* front, Node* rear) { //DisplayQueue function
     if (isEmpty(front, rear)) {
         cout << "Empty queue" << endl;
     }
-    else {
+    else {//go through queue
         Node* temp = front;
         while (temp != NULL) {
             cout << temp->getData() << " ";
